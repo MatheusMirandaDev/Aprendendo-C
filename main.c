@@ -1,32 +1,51 @@
 #include <stdio.h>
+#include <string.h>
+#include <locale.h>
+#define t 50
+
+struct tipoPessoa
+{
+    int idade;
+    float peso;
+    char nome[t]
+};
+
+typedef struct tipoPessoa tipoPessoa;
 
 int main()
 {
-    int mat[3][3] = {{1, 2, 3},
-                     {4, 5, 6},
-                     {7, 8, 9}};
-    int i, j;
+    setlocale(LC_ALL, "Portuguese");
 
-    printf("imprima a primeira linha: \n");
-    for (j = 0; j < 3; j++)
-    {
-        printf("%d ", mat[0][j]);
-    }
+    tipoPessoa pes = {0, 0.0, "teste"};
 
-    printf("\n\nImprimindo a primeira coluna: \n");
-    for (i = 0; i < 3; i++)
-    {
-        printf("%d ", mat[i][0]);
-        printf("\n");
-    }
+    // inicializando
+    printf("inicio\n");
+    printf("pes.idade: %d\n", pes.idade);
+    printf("pes.peso: %.2f\n", pes.peso);
+    printf("pes.nome: %s\n", pes.nome);
+    printf("\n");
 
-    printf("\n\nImprimindo matriz inteira: \n");
-    for (i = 0; i < 3; i++)
-    {
-        for (j = 0; j < 3; j++)
-        {
-            printf("%d ", mat[i][j]);
-        }
-        printf("\n");
-    }
+    // atribuindo valor aos campos
+    pes.idade = 30;
+    pes.peso = 80;
+    strcpy(pes.nome, "Matheus");
+
+    printf("pes.idade: %d\n", pes.idade);
+    printf("pes.peso: %.2f\n", pes.peso);
+    printf("pes.nome: %s\n", pes.nome);
+
+    // recebendo valores para a variavel
+    printf("Qual o valor será atribuido para idade? \n");
+    scanf("%d", &pes.idade);
+    fflush(stdin);
+    printf("\nQual o valor será atribuido para peso? \n");
+    scanf("%f", &pes.peso);
+    fflush(stdin);
+    printf("\nqual o valor será atribuido para o nome?\n");
+    fgets(pes.nome, t, stdin);
+    fflush(stdin);
+
+    printf("\n\npes.idade: %d\n", pes.idade);
+    printf("pes.peso: %.2f\n", pes.peso);
+    printf("pes.nome: %s\n", pes.nome);
 }
