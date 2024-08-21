@@ -1,13 +1,14 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <locale.h>
-#define t 50
+#define t 3
 
 struct tipoPessoa
 {
     int idade;
     float peso;
-    char nome[t]
+    char nome[50];
 };
 
 typedef struct tipoPessoa tipoPessoa;
@@ -16,36 +17,32 @@ int main()
 {
     setlocale(LC_ALL, "Portuguese");
 
-    tipoPessoa pes = {0, 0.0, "teste"};
+    tipoPessoa lista[t];
+    int i;
 
-    // inicializando
-    printf("inicio\n");
-    printf("pes.idade: %d\n", pes.idade);
-    printf("pes.peso: %.2f\n", pes.peso);
-    printf("pes.nome: %s\n", pes.nome);
-    printf("\n");
+    for (i = 0; i < t; i++)
+    {
+        printf("insira os dados da pessoa (%d)\n", i + 1);
+        printf("nome: ");
+        fgets(lista[i].nome, 50, stdin);
+        fflush(stdin);
 
-    // atribuindo valor aos campos
-    pes.idade = 30;
-    pes.peso = 80;
-    strcpy(pes.nome, "Matheus");
+        printf("Idade:");
+        scanf("%d", &lista[i].idade);
+        fflush(stdin);
 
-    printf("pes.idade: %d\n", pes.idade);
-    printf("pes.peso: %.2f\n", pes.peso);
-    printf("pes.nome: %s\n", pes.nome);
+        printf("peso:");
+        scanf("%f", &lista[i].peso);
+        fflush(stdin);
+    }
+    system("cls");
 
-    // recebendo valores para a variavel
-    printf("Qual o valor será atribuido para idade? \n");
-    scanf("%d", &pes.idade);
-    fflush(stdin);
-    printf("\nQual o valor será atribuido para peso? \n");
-    scanf("%f", &pes.peso);
-    fflush(stdin);
-    printf("\nqual o valor será atribuido para o nome?\n");
-    fgets(pes.nome, t, stdin);
-    fflush(stdin);
-
-    printf("\n\npes.idade: %d\n", pes.idade);
-    printf("pes.peso: %.2f\n", pes.peso);
-    printf("pes.nome: %s\n", pes.nome);
+    for (i = 0; i < t; i++)
+    {
+        printf("------ Pessoa %d ----------\n", i + 1);
+        printf("Nome: %s\n", lista[i].nome);
+        printf("Idade: %d\n", lista[i].idade);
+        printf("Peso: %.2f\n", lista[i].peso);
+    }
+    return 0;
 }
