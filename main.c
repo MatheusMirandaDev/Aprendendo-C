@@ -1,19 +1,33 @@
 #include <stdio.h>
 
+int gVariavelGlobal = 2; /*variavel global pode ser utilizada em todas as funções
+                           sem precisar declarar ela novamente.
+                           O "g" no começo é para ficar mais facil de identificar
+                           que ela é uma variavel global, e ela funciona como ESTATICA*/
 int main()
 {
-    float areaRetang(float x, float y);  // chamou a função criada
-    float area = areaRetang(10.0, 20.0); // atribiu valor as variaveis da função
 
-    printf("A area e: %.1f", area); // imprime a area do retangulo
+    void teste(void);
+
+    printf("global: %d\n", gVariavelGlobal);
+    teste();
+    teste();
 
     return 0;
 }
 
-float areaRetang(float base, float altura) // criação da função para a criação do calculo da área
+void teste(void)
 {
 
-    float area = base * altura; // formula da area
+    int variavelLocalAutomatica = 2; // variavel automatica reinicia o seu valor todas as vezes for chamada
+    variavelLocalAutomatica *= 2;
 
-    return area; // pede para a função retornar o valor da area
+    static int variavelLocalEstatica = 2; // variavel estatica salva o seu valor e altera na proxima chamada
+    variavelLocalEstatica *= 2;
+
+    gVariavelGlobal *= 2; // global que pode ser utilizada em todas as funções sem problemas
+
+    printf("local automatica: %d\n", variavelLocalAutomatica);
+    printf("local estatica: %d\n", variavelLocalEstatica);
+    printf("global: %d\n", gVariavelGlobal);
 }
