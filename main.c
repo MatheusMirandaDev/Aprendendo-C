@@ -2,13 +2,18 @@
 
 int main()
 {
-    void imprimaMensagem(void); // declaro a minha função criada lá embaixo
+    float areaRetang(float x, float y);  // chamou a função criada
+    float area = areaRetang(10.0, 20.0); // atribiu valor as variaveis da função
 
-    imprimaMensagem(); // chamo a minha função criada la embaixo para imprimir oq está contido nela
+    printf("A area e: %.1f", area); // imprime a area do retangulo
+
     return 0;
 }
 
-void imprimaMensagem(void) // criando uma segunda função, ela é vazia e tem argumento vazio
+float areaRetang(float base, float altura) // criação da função para a criação do calculo da área
 {
-    printf("teste"); // quero imprmir essa mensagem
+
+    float area = base * altura; // formula da area
+
+    return area; // pede para a função retornar o valor da area
 }
