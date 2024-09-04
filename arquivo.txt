@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <stdlib.h>
+void calculadora (float *x, float *y, char ope){
+        switch (ope){
+        case '+':
+        printf("Resultado: %f\n", *x + *y);
+            break;
+            case '-':
+        printf("Resultado: %f\n", *x - *y);
+            break;
+            case '/' :
+        if (*y != 0) {
+                printf("Resultado: %.2f\n", *x / *y);
+            } else {
+                printf("Erro: Divisao por zero\n");
+            }
+            break;
+            case '*': 
+        printf("Resultado: %.2f\n", *x * *y);
+            break;
+        default:
+        printf("operacao invalida");
+            break;}}
+int main(){
+    system("cls");
+    float x, y;
+    char ope;
+    printf("Digite o primeiro numero: ");
+    scanf("%f", &x);
+    printf("escolha uma das operacoes (+, -, /, *): ");
+    scanf(" %c", &ope);
+    printf("Digite o segundo numero: ");
+    scanf("%f", &y);
+    calculadora(&x, &y, ope);
+    return 0;}  
