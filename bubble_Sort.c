@@ -14,18 +14,21 @@ void numVetor(int vetor[])
 
 void ordemCrescente(int vetor[], int n)
 {
-    int temp, menor;
+    int temp;
 
-    for (int i = 1; i < (n); i++)
+    for (int i = 0; i < n; i++)
     {
-        int j = i;
 
-        while (j > 0 && vetor[j] < vetor[j - 1])
+        for (int j = i + 1; j < n; j++)
         {
-            temp = vetor[j];
-            vetor[j] = vetor[j - 1];
-            vetor[j - 1] = temp;
-            j -= 1;
+
+            if (vetor[j] < vetor[i])
+            {
+
+                temp = vetor[i];
+                vetor[i] = vetor[j];
+                vetor[j] = temp;
+            }
         }
     }
 }
