@@ -58,7 +58,7 @@ void Enqueue(int dado, FILA *fila)
     }
 }
 
-// Função para adicionar um elemento na fila (enfileirar)
+// Função para adicionar um elemento COM PRIORIDADE na fila  (enfileirar)
 void Enqueue_Prioridade(int dado, FILA *fila)
 {
     // Aloca memória para um novo nó
@@ -85,34 +85,40 @@ void Enqueue_Prioridade(int dado, FILA *fila)
         }
         else
         {
-            // é prioridade?
+            // Verifica se o dado tem prioridade (número maior que 59)
             if (dado > 59)
             {
-                // é a primeira prioridade?
+                // Verifica se o primeiro elemento da fila não tem prioridade (menor que 60)
                 if ((novo->proximo) < 60)
                 {
+                    // O novo nó se torna o novo início da fila (insere no início, pois o elemento tem prioridade)
                     novo->proximo = fila->inicio;
                     fila->inicio = novo;
                 }
                 else
                 {
+                    // Se a fila já tiver elementos com prioridade, encontra o lugar correto
                     NO *atual = fila->inicio;
+
+                    // Avança até encontrar o último nó com prioridade maior que 59
                     while (atual->proximo != NULL && atual->proximo->dado > 59)
                     {
                         atual = atual->proximo;
                     }
+
+                    // Insere o novo nó logo após o último nó com prioridade
                     novo->proximo = atual->proximo;
                     atual->proximo = novo;
                 }
             }
             else
             {
-                // Caso contrário, conecta o novo nó ao final da fila
+                // Se o dado não tem prioridade, insere o novo nó no final da fila
                 fila->fim->proximo = novo;
             }
         }
 
-        // Atualiza o ponteiro do fim para o novo nó
+        // Atualiza o ponteiro do fim para o novo nó inserido
         fila->fim = novo;
     }
 }
