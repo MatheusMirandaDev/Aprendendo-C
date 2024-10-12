@@ -4,8 +4,9 @@
 // Definição da estrutura NO, que representa cada elemento da lista encadeada
 typedef struct NO
 {
-    int dado;           // Campo que armazena o valor do nó
-    struct NO *proximo; // Ponteiro para o próximo nó na lista
+    int dado;            // Campo que armazena o valor do nó
+    struct NO *proximo;  // Ponteiro para o próximo nó na lista
+    struct NO *anterior; // Ponteiro para o próximo nó na lista
 } NO;
 
 // Função para inserir um elemento no início da lista
@@ -29,6 +30,13 @@ void inserir_no_inicio(NO **lista, int valor)
         // O próximo nó apontará para o atual início da lista
         novo->proximo = *lista;
 
+        novo->anterior = NULL;
+
+        if (*lista != NULL)
+        {
+            (*lista)->anterior = novo;
+        }
+
         // O novo nó se torna o início da lista
         *lista = novo;
     }
@@ -46,31 +54,36 @@ void inserir_no_fim(NO **lista, int valor)
         printf("Erro na alocação de memória\n"); // Exibe mensagem de erro
         return;                                  // Retorna se houver falha
     }
-
-    // Atribui o valor ao campo 'dado' do novo nó
-    novo->dado = valor;
-
-    // Como este será o último nó, o próximo é NULL
-    novo->proximo = NULL;
-
-    // Se a lista estiver vazia, o novo nó será o primeiro
-    if (*lista == NULL)
-    {
-        *lista = novo;
-    }
     else
     {
-        // Usa 'aux' para percorrer a lista sem perder a referência do início
-        aux = *lista;
 
-        // Percorre a lista até encontrar o último nó
-        while (aux->proximo != NULL)
+        // Atribui o valor ao campo 'dado' do novo nó
+        novo->dado = valor;
+
+        // Como este será o último nó, o próximo é NULL
+        novo->proximo = NULL;
+
+        // Se a lista estiver vazia, o novo nó será o primeiro
+        if (*lista == NULL)
         {
-            aux = aux->proximo;
+            *lista = novo;
+            novo->anterior = NULL;
         }
+        else
+        {
+            // Usa 'aux' para percorrer a lista sem perder a referência do início
+            aux = *lista;
 
-        // Conecta o novo nó ao final da lista
-        aux->proximo = novo;
+            // Percorre a lista até encontrar o último nó
+            while (aux->proximo != NULL)
+            {
+                aux = aux->proximo;
+            }
+
+            // Conecta o novo nó ao final da lista
+            aux->proximo = novo;
+            novo->anterior = aux;
+        }
     }
 }
 
@@ -95,6 +108,7 @@ void inserir_no_meio(NO **lista, int valor, int elemento_anterior)
     if (*lista == NULL)
     {
         novo->proximo = NULL;
+        novo->anterior = NULL;
         *lista = novo;
     }
     else
@@ -110,6 +124,8 @@ void inserir_no_meio(NO **lista, int valor, int elemento_anterior)
 
         // Insere o novo nó após o nó encontrado
         novo->proximo = aux->proximo;
+        aux->proximo->anterior = novo;
+        novo->anterior = aux;
         aux->proximo = novo;
     }
 }
@@ -127,6 +143,10 @@ NO *remover(NO **lista, int num_remover)
         {
             remover = *lista;          // Armazena o nó a ser removido
             *lista = remover->proximo; // Atualiza o início da lista para o próximo nó
+            if (*lista != NULL)
+            {
+                (*lista)->anterior = NULL;
+            }
         }
         else
         {
@@ -141,6 +161,10 @@ NO *remover(NO **lista, int num_remover)
             {
                 remover = aux->proximo;          // Armazena o nó a ser removido
                 aux->proximo = remover->proximo; // Atualiza o ponteiro do nó anterior para pular o nó removido
+                if (aux->proximo)
+                {
+                    aux->proximo->anterior = aux;
+                }
             }
             // Se um nó foi removido
             if (remover != NULL)
@@ -194,8 +218,31 @@ void imprimir(NO *no)
     printf("\n\n"); // Nova linha após a impressão
 }
 
+NO *ultimo(NO **lista)
+{
+    NO *aux = *lista;
+    while (aux->proximo != NULL)
+    {
+        aux = aux->proximo;
+    }
+    return aux;
+}
+
+void imprimir_contrario(NO *no)
+{
+    printf("\n---Lista ao Contrario:---\n"); // Informa que a lista será impressa
+    // Percorre a lista enquanto não chegar ao final
+    while (no != NULL)
+    {
+        printf("%d ", no->dado); // Imprime o valor do nó atual
+        no = no->anterior;       // Move para o nó anterior
+    }
+    printf("\n\n"); // Nova linha após a impressão
+}
+
 int main(int argc, char const *argv[])
 {
+
     NO *lista = NULL; // Cria uma lista vazia
 
     // Exemplo de uso das funções de inserção
@@ -204,12 +251,17 @@ int main(int argc, char const *argv[])
     inserir_no_fim(&lista, 40);
     inserir_no_fim(&lista, 70);
     inserir_no_meio(&lista, 15, 10);
-    imprimir(lista);
 
-    remover(&lista, 40); // Remove o nó que contém 40
-    imprimir(lista);     // Imprime a lista após a remoção
+    imprimir(lista);                    // imprime a lista
+    imprimir_contrario(ultimo(&lista)); // imprime a lista ao contrario
+
+    remover(&lista, 40);                // Remove o nó que contém 40
+    imprimir(lista);                    // Imprime a lista após a remoção
+    imprimir_contrario(ultimo(&lista)); // Imprime a lista ao contrario após a remoção
 
     buscar(&lista, 20); // Busca o nó que contém 20
 
     return 0; // Finaliza o programa
+
+    return 0;
 }
