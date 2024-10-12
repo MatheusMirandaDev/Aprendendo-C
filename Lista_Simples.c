@@ -191,7 +191,7 @@ void imprimir(NO *no)
         printf("%d ", no->dado); // Imprime o valor do nó atual
         no = no->proximo;        // Move para o próximo nó
     }
-    printf("\n\n"); // Nova linha após a impressão
+    printf("\n"); // Nova linha após a impressão
 }
 
 int main(int argc, char const *argv[])
