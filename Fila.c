@@ -58,6 +58,65 @@ void Enqueue(int dado, FILA *fila)
     }
 }
 
+// Função para adicionar um elemento na fila (enfileirar)
+void Enqueue_Prioridade(int dado, FILA *fila)
+{
+    // Aloca memória para um novo nó
+    NO *novo = (NO *)malloc(sizeof(NO));
+
+    // Verifica se a alocação de memória foi bem-sucedida
+    if (novo == NULL)
+    {
+        printf("Erro na alocação de memória\n"); // Exibe mensagem de erro
+        return;                                  // Retorna caso a alocação falhe
+    }
+    else
+    {
+        // Atribui o valor passado como parâmetro ao novo nó
+        novo->dado = dado;
+
+        // O próximo nó deve apontar para NULL, já que é o último nó na fila
+        novo->proximo = NULL;
+
+        // Se a fila estiver vazia, o novo nó será o início da fila
+        if (fila->inicio == NULL)
+        {
+            fila->inicio = novo; // Define o novo nó como o início
+        }
+        else
+        {
+            // é prioridade?
+            if (dado > 59)
+            {
+                // é a primeira prioridade?
+                if ((novo->proximo) < 60)
+                {
+                    novo->proximo = fila->inicio;
+                    fila->inicio = novo;
+                }
+                else
+                {
+                    NO *atual = fila->inicio;
+                    while (atual->proximo != NULL && atual->proximo->dado > 59)
+                    {
+                        atual = atual->proximo;
+                    }
+                    novo->proximo = atual->proximo;
+                    atual->proximo = novo;
+                }
+            }
+            else
+            {
+                // Caso contrário, conecta o novo nó ao final da fila
+                fila->fim->proximo = novo;
+            }
+        }
+
+        // Atualiza o ponteiro do fim para o novo nó
+        fila->fim = novo;
+    }
+}
+
 // Função para remover um elemento da fila (desenfileirar)
 int Dequeue(FILA *fila)
 {
@@ -130,6 +189,9 @@ int main(int argc, char const *argv[])
         Enqueue(10, fila);
         Enqueue(20, fila);
         Enqueue(30, fila);
+        Enqueue_Prioridade(58, fila);
+        Enqueue_Prioridade(58, fila);
+        Enqueue_Prioridade(79, fila);
 
         imprimir_fila(fila);
 
