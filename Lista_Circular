@@ -1,0 +1,199 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Definição da estrutura NO (nó da lista), contendo o dado (um valor inteiro)
+// e um ponteiro para o próximo nó da lista.
+typedef struct NO
+{
+    int dado;           // Armazena o valor do nó
+    struct NO *proximo; // Ponteiro para o próximo nó
+} NO;
+
+// Definição da estrutura LISTA, que contém ponteiros para o início e fim da lista,
+// além de uma variável que armazena o tamanho da lista.
+typedef struct
+{
+    NO *inicio;  // Ponteiro para o primeiro nó da lista
+    NO *fim;     // Ponteiro para o último nó da lista
+    int tamanho; // Armazena o número de elementos da lista
+} LISTA;
+
+// Função para inicializar uma lista vazia. Define o início e o fim como NULL,
+// e o tamanho como zero.
+void criar_lista(LISTA *lista)
+{
+    lista->inicio = NULL;
+    lista->fim = NULL; // Inicializa o ponteiro fim
+    lista->tamanho = 0;
+}
+
+// Função para inserir um novo nó no início da lista.
+void inserir_no_inicio(LISTA *lista, int valor)
+{
+    NO *novo = (NO *)malloc(sizeof(NO)); // Aloca memória para um novo nó
+
+    if (novo != NULL) // Verifica se a alocação foi bem-sucedida
+    {
+        novo->dado = valor;            // Atribui o valor ao novo nó
+        novo->proximo = lista->inicio; // O próximo do novo nó aponta para o antigo início
+        lista->inicio = novo;          // Atualiza o início para o novo nó
+        if (lista->fim == NULL)        // Se a lista estava vazia, o novo nó é o primeiro e o último
+        {
+            lista->fim = novo;
+        }
+
+        lista->fim->proximo = lista->inicio; // O fim da lista aponta para o início (lista circular)
+        lista->tamanho++;                    // Incrementa o tamanho da lista
+    }
+    else
+    {
+        printf("Erro na alocação\n"); // Exibe erro caso a alocação falhe
+    }
+}
+
+// Função para inserir um novo nó no fim da lista.
+void inserir_no_fim(LISTA *lista, int valor)
+{
+    NO *novo = (NO *)malloc(sizeof(NO)); // Aloca memória para um novo nó
+
+    if (novo != NULL) // Verifica se a alocação foi bem-sucedida
+    {
+        novo->dado = valor; // Atribui o valor ao novo nó
+
+        if (lista->inicio == NULL) // Se a lista estava vazia, o novo nó é o primeiro e o último
+        {
+            lista->inicio = novo;
+            lista->fim = novo;                   // Atualiza o ponteiro fim
+            lista->fim->proximo = lista->inicio; // A lista circular aponta para o início
+        }
+        else
+        {
+            lista->fim->proximo = novo;          // O fim anterior aponta para o novo nó
+            lista->fim = novo;                   // Atualiza o fim da lista
+            lista->fim->proximo = lista->inicio; // O novo nó aponta para o início
+        }
+
+        lista->tamanho++; // Incrementa o tamanho da lista
+    }
+    else
+    {
+        printf("Erro na alocação\n"); // Exibe erro caso a alocação falhe
+    }
+}
+
+// Função para remover um nó da lista, dado um valor específico.
+NO *remover(LISTA *lista, int valor)
+{
+    NO *aux, *remover = NULL; // Ponteiros auxiliares para remoção
+
+    if (lista->inicio != NULL) // Verifica se a lista não está vazia
+    {
+        // Caso especial: apenas um nó na lista e o valor a ser removido é o primeiro
+        if (lista->inicio == lista->fim && lista->inicio->dado == valor)
+        {
+            remover = lista->inicio;
+            lista->inicio = NULL;
+            lista->fim = NULL;
+            lista->tamanho--;
+        }
+        // Remoção do primeiro nó (quando a lista tem mais de um nó)
+        else if (lista->inicio->dado == valor)
+        {
+            remover = lista->inicio;
+            lista->inicio = remover->proximo;    // Atualiza o início
+            lista->fim->proximo = lista->inicio; // O fim ainda aponta para o novo início
+            lista->tamanho--;
+        }
+        // Remoção de um nó no meio ou fim da lista
+        else
+        {
+            aux = lista->inicio;
+            // Percorre a lista procurando o nó que contém o valor a ser removido
+            while (aux->proximo != lista->inicio && aux->proximo->dado != valor)
+            {
+                aux = aux->proximo;
+            }
+            // Se encontrou o valor, remove o nó
+            if (aux->proximo->dado == valor)
+            {
+                remover = aux->proximo;
+                if (lista->fim == remover) // Se o nó removido é o último
+                {
+                    lista->fim = aux; // Atualiza o fim
+                }
+                aux->proximo = remover->proximo; // Remove o nó da lista
+                lista->tamanho--;
+            }
+        }
+
+        return remover; // Retorna o nó removido
+    }
+
+    return NULL; // Se a lista estiver vazia, retorna NULL
+}
+
+// Função para buscar um nó na lista que contenha um determinado valor.
+NO *busca(LISTA *lista, int numero)
+{
+    NO *aux = lista->inicio; // Ponteiro auxiliar para percorrer a lista
+
+    if (aux != NULL) // Verifica se a lista não está vazia
+    {
+        do
+        {
+            if (aux->dado == numero) // Se o valor for encontrado, retorna o nó
+            {
+                return aux;
+            }
+
+            aux = aux->proximo; // Avança para o próximo nó
+
+        } while (aux != lista->inicio); // Continua até voltar ao início (lista circular)
+    }
+    return NULL; // Retorna NULL se o valor não for encontrado
+}
+
+// Função para imprimir os valores da lista
+void imprimir(LISTA *lista)
+{
+    printf("\n--- Lista: ---\n");
+
+    NO *no = lista->inicio;                           // Ponteiro para percorrer a lista
+    printf("Tamanho da lista: %d\n", lista->tamanho); // Exibe o tamanho da lista
+
+    if (no != NULL) // Verifica se a lista não está vazia
+    {
+        do
+        {
+            printf("%d ", no->dado); // Imprime o valor do nó atual
+            no = no->proximo;        // Avança para o próximo nó
+        } while (no != lista->inicio); // Continua até voltar ao início (lista circular)
+    }
+
+    printf("\n\n");
+}
+
+// Função principal que demonstra o uso das operações na lista
+int main(int argc, char const *argv[])
+{
+    LISTA lista;         // Declara uma lista
+    criar_lista(&lista); // Inicializa a lista
+
+    // Insere valores na lista
+    inserir_no_inicio(&lista, 10);
+    inserir_no_fim(&lista, 20);
+    inserir_no_fim(&lista, 40);
+    inserir_no_fim(&lista, 70);
+
+    // Imprime a lista
+    imprimir(&lista);
+
+    // Remove o nó que contém o valor 40
+    remover(&lista, 40);
+    imprimir(&lista); // Imprime a lista após a remoção
+
+    // Busca o nó que contém o valor 20
+    busca(&lista, 20);
+
+    return 0;
+}
